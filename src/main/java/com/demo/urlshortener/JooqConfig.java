@@ -10,8 +10,13 @@ import javax.sql.DataSource;
 @Configuration
 public class JooqConfig {
 
+    // TODO mojsej lepsie je pouzivat constructor injection ako field injection, pretoze sa potom sa da lepsie spravit MOCKovany komponent
+    private final DataSource dataSource;
+
     @Autowired
-    private DataSource dataSource;
+    public JooqConfig(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Bean
     public DSLContext dslContext() {

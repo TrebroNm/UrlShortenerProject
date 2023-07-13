@@ -1,6 +1,5 @@
 package com.demo.urlshortener;
 
-// TODO mojsej nepouzite importy. V ideai staci len nechat zbehnut check a opravit.
 import com.demo.urlshortener.interfaces.IUrlRepository;
 import com.demo.urlshortener.interfaces.IUrlService;
 import org.jooq.DSLContext;

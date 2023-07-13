@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
-
 @Repository
 public class UrlRepository implements IUrlRepository {
 
@@ -21,9 +20,6 @@ public class UrlRepository implements IUrlRepository {
     }
 
     public int addUrl(String longUrl) throws DataAccessException{
-        // TODO takto by sa nemal JOOQ pouzivat, nie je to typesafe.
-        // Robi sa to tak ze si nehate vygenerovat Java metamodel z DB schemy. Je na to gradle plugin, vid https://github.com/etiennestuder/gradle-jooq-plugin
-        // Nasledne sa neodkazujete cez stringove nazvy tabuliek a stlpcov ale cez vygenerovany java model
         Result<Record> result = this.dslContext.insertInto(table("urls"))
                     .columns(field("long_url"))
                     .values(longUrl)

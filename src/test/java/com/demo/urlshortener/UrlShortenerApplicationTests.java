@@ -10,6 +10,4 @@ class UrlShortenerApplicationTests {
     void contextLoads() {
     }
 
-    // TODO mojsej chybaju testy
-
 }

@@ -19,21 +19,32 @@ public class UrlService implements IUrlService {
         this.urlRepository = urlRepository;
     }
 
-    public String getLongUrl(int shortUrlId) {
-        try{
-            return urlRepository.getLongUrl(shortUrlId);
-        }catch (DataAccessException ex) {
-            throw new DataAccessException("Error occurred while retrieving long URL from the database", ex);
-        }
+    public String getLongUrl(String shortUrlId) throws DataAccessException{
+        return urlRepository.getLongUrl(shortUrlId);
     }
 
-    public String addUrl(String longUrl) {
-        try{
-            int shortUrlId = urlRepository.addUrl(longUrl);
-            String shortUrl = baseUrl + "/" + shortUrlId;
-            return shortUrl;
-        }catch (DataAccessException ex) {
-            throw new RuntimeException("Error occurred while adding URL to the database", ex);
+    public String addUrl(String longUrl) throws DataAccessException{
+        //Check if url isn't already added
+        String shortUrlId = urlRepository.checkIfUrlAdded(longUrl);
+
+        //If it is not added, add it
+        if(shortUrlId==null){
+            shortUrlId = GenerateUniqueStringId();
+            urlRepository.addUrl(longUrl, shortUrlId);
         }
+
+        //Constructs shortened url
+        String shortUrl = baseUrl + "/" + shortUrlId;
+        return shortUrl;
+    }
+
+    //Generates a random string and then checks if it isn't already in the database
+    //If it is in the database, loops and generates a new one
+    protected String GenerateUniqueStringId()throws DataAccessException{
+        String id;
+        do {
+            id = RandomStringGenerator.generate(10);
+        } while (!urlRepository.isIdUnique(id));
+        return id;
     }
 }

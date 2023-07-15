@@ -1,6 +1,8 @@
 package com.demo.urlshortener.interfaces;
 
 public interface IUrlRepository {
-    int addUrl(String longUrl);
-    String getLongUrl(int shortUrlId);
+    void addUrl(String longUrl, String id);
+    String getLongUrl(String shortUrlId);
+    String checkIfUrlAdded(String longUrl);
+    boolean isIdUnique(String id);
 }

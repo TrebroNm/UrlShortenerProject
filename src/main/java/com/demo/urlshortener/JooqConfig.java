@@ -1,8 +1,10 @@
 package com.demo.urlshortener;
-import org.jooq.*;
-import org.jooq.impl.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.context.annotation.*;
+
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;

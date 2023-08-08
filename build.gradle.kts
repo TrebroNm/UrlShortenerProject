@@ -3,17 +3,17 @@ import org.jooq.meta.jaxb.Property
 
 plugins {
     java
-    id("org.springframework.boot") version "2.7.13"
-    id("io.spring.dependency-management") version "1.0.15.RELEASE"
-    id("nu.studer.jooq") version "6.0"
-    id("org.flywaydb.flyway") version "9.16.0"
+    id("org.springframework.boot") version "3.1.2"
+    id("io.spring.dependency-management") version "1.1.2"
+    id("nu.studer.jooq") version "8.2.1"
+    id("org.flywaydb.flyway") version "9.21.1"
 }
 
 group = "com.demo"
 version = "0.0.1-SNAPSHOT"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
 }
 
 repositories {
@@ -21,15 +21,16 @@ repositories {
 }
 
 dependencies {
+    implementation("org.flywaydb:flyway-core:9.21.1")
+    implementation("org.jooq:jooq")
+    implementation("org.postgresql:postgresql:42.2.27")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
     implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.postgresql:postgresql:42.2.20")
-    implementation("org.flywaydb:flyway-core:9.16.0")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    jooqGenerator("org.postgresql:postgresql:42.5.1")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.0.0")
     testImplementation("org.mockito:mockito-inline:3.4.6")
-    implementation("org.jooq:jooq")
-    jooqGenerator("org.postgresql:postgresql:42.5.1")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 
@@ -44,14 +45,15 @@ afterEvaluate {
 }
 
 flyway {
-    url = "jdbc:postgresql://localhost:5432/UrlShortener"
-    user = "defaultUser"
-    password = "justPassword"
-    locations = arrayOf("classpath:db/migration")
+    url = "jdbc:postgresql://localhost:5432/urlshortener"
+    user = "urlshortener"
+    password = "heslo"
+    locations = arrayOf("filesystem:${projectDir}/src/main/resources/db/migration")
+    cleanDisabled = false
 }
 
 jooq {
-    version.set("3.14.0")  // default (can be omitted)
+    version.set("3.18.5")  // default (can be omitted)
     edition.set(nu.studer.gradle.jooq.JooqEdition.OSS)  // default (can be omitted)
 
     configurations {
@@ -62,9 +64,9 @@ jooq {
                 logging = Logging.WARN
                 jdbc.apply {
                     driver = "org.postgresql.Driver"
-                    url = "jdbc:postgresql://localhost:5432/UrlShortener"
-                    user = "defaultUser"
-                    password = "justPassword"
+                    url = "jdbc:postgresql://localhost:5432/urlshortener"
+                    user = "urlshortener"
+                    password = "heslo"
                     properties.add(Property().apply {
                         key = "ssl"
                         value = "false"
@@ -83,7 +85,7 @@ jooq {
                         isFluentSetters = true
                     }
                     target.apply {
-                        packageName = "nu.studer.sample"
+                        packageName = "com.demo.urlshortener"
                         directory = "build/generated-src/jooq/main"  // default (can be omitted)
                     }
                     strategy.name = "org.jooq.codegen.DefaultGeneratorStrategy"

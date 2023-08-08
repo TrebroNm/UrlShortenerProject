@@ -1,10 +1,6 @@
 package com.demo.urlshortener;
 
-import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
@@ -13,12 +9,10 @@ import javax.sql.DataSource;
 public class JooqConfig {
 
     private DataSource dataSource;
+
     @Autowired
-    public JooqConfig(DataSource dataSource){
+    public JooqConfig(DataSource dataSource) {
         this.dataSource = dataSource;
     }
-    @Bean
-    public DSLContext dslContext() {
-        return DSL.using(dataSource, SQLDialect.POSTGRES);
-    }
+
 }

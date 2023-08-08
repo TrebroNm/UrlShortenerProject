@@ -1,4 +1,4 @@
-package com.demo.urlshortener.UnitTests;
+package com.demo.urlshortener.unittests;
 
 
 import com.demo.urlshortener.RandomStringGenerator;

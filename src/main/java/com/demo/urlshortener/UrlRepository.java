@@ -1,45 +1,46 @@
 package com.demo.urlshortener;
+
 import com.demo.urlshortener.interfaces.IUrlRepository;
-import nu.studer.sample.tables.Urls;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import static com.demo.urlshortener.Tables.URLS;
+
 @Repository
 public class UrlRepository implements IUrlRepository {
 
-    private final DSLContext dslContext;
-    private final Urls urls = Urls.URLS;
+    private final DSLContext jooq;
 
     @Autowired
-    public UrlRepository(DSLContext dslContext) {
-        this.dslContext = dslContext;
+    public UrlRepository(DSLContext jooq) {
+        this.jooq = jooq;
     }
 
-    public void addUrl(String longUrl, String id) throws DataAccessException{
-        this.dslContext.insertInto(urls)
-                .columns(urls.LONG_URL, urls.ID)
+    public void addUrl(String longUrl, String id) throws DataAccessException {
+        jooq.insertInto(URLS, URLS.LONG_URL, URLS.ID)
                 .values(longUrl, id).execute();
     }
 
-    public String getLongUrl(String shortUrlId) throws DataAccessException{
-        return this.dslContext.select(urls.LONG_URL)
-                .from(urls)
-                .where(urls.ID.eq(shortUrlId))
+    public String getLongUrl(String shortUrlId) throws DataAccessException {
+        return jooq.select(URLS.LONG_URL)
+                .from(URLS)
+                .where(URLS.ID.eq(shortUrlId))
                 .fetchOneInto(String.class);
     }
 
-    public String checkIfUrlAdded(String longUrl) throws DataAccessException{
-        return this.dslContext.select(urls.ID)
-                .from(urls)
-                .where(urls.LONG_URL.eq(longUrl))
+    public String checkIfUrlAdded(String longUrl) throws DataAccessException {
+        return jooq.select(URLS.ID)
+                .from(URLS)
+                .where(URLS.LONG_URL.eq(longUrl))
                 .fetchAnyInto(String.class);
     }
 
-    public boolean isIdUnique(String id) throws DataAccessException{
-        return this.dslContext.selectFrom(urls)
-                .where(urls.ID.eq(id))
+    public boolean isIdUnique(String id) throws DataAccessException {
+        //return jooq.select(DSL.exists(DSL.selectFrom(URLS).where(URLS.ID.eq(id))));
+        return jooq.selectFrom(URLS)
+                .where(URLS.ID.eq(id))
                 .fetchOne() == null;
     }
 }
